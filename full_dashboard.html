@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FIELDMAX LTD Dashboard</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+     .sidebar {
+    height: 100vh;
+    background: linear-gradient(180deg, #000000);
+    color: #fff;
+    position: fixed;
+    top: 20;
+    left: 20;
+    width: 250px;
+    overflow-y: auto;
+    padding-top: 20px;
+    border-right: 6px solid #343a40; /* thick separator line */
+  }
+    .sidebar .logo {
+      margin-bottom: 50px;
+    }
+    .sidebar a {
+      color: #fff;
+      text-decoration: none;
+      display: block;
+      padding: 10px 20px;
+      font-weight: 500;
+    }
+    .sidebar a:hover {
+      background: rgba(255,255,255,0.2);
+      border-radius: 5px;
+    }
+    .content {
+      margin-left: 250px;
+      padding: 20px;
+      padding-top: 80px;
+    }
+    .bottom-navbar {
+      background-color: #343a40;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      left: 250px;
+      right: 0;
+    }
+    .help-section {
+      color: #ffc107;
+      font-weight: bold;
+      padding: 20px;
+      text-align: center;
+    }
+    .logo img {
+      height: 50px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" style="margin-left:250px; height: 112px;">
+  <div class="container-fluid h-100">
+    <span class="navbar-brand mb-0 h1 d-flex align-items-center" style="height: 100%;">
+      HELLO "{{ user.username }}", WELCOME TO FIELDMAX LTD
+    </span>
+    <ul class="navbar-nav ms-auto h-100 d-flex align-items-center">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+          Profile
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">My Profile</a></li>
+          <li><a class="dropdown-item" href="#">Logout</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+ 
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo text-center mb-4">
+      <img src="https://via.placeholder.com/80x80?text=Logo" alt="Logo" class="rounded-circle mb-2">
+      <h5>FIELDMAX LTD</h5>
+    </div>
+ <a href="#" onclick="showSection('dashboard')">Dashboard</a>
+<a href="#" onclick="showSection('categories')">Categories</a>
+<a href="#" onclick="showSection('manage-users')">Manage Users</a>
+<a href="#" onclick="showSection('roles-management')">Roles Management</a>
+<a href="#" onclick="showSection('permissions')">Permissions</a>
+<a href="#" onclick="showSection('onboarding')">Onboarding</a>
+<a href="#" onclick="showSection('sales-report')">Sales Report</a>
+<a href="#" onclick="showSection('record-sale')">Record Sale</a>
+<a href="#" onclick="showSection('generate-report')">Generate Report</a>
+<a href="#" onclick="showSection('settings')">Settings</a>
+
+
+    <div class="help-section mt-4">
+      Need help? Call 0722527955
+    </div>
+  </div>
+
+ <!-- Main Content -->
+<div class="content">
+  <hr class="mt-0 mb-4">
+  <p class="lead">Manage system settings efficiently.</p>
+</div>
+<div class="content" style="padding-top: 10px;">
+  
+  <!-- Dashboard -->
+  <div id="dashboard-section">
+    <h2>Dashboard</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card text-bg-primary p-3">
+          <h5>Sales</h5>
+          <p>Daily Sales: KES 0.00</p>
+          <p>Weekly Sales: KES 0.00</p>
+          <p>Monthly Sales: KES 0.00</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-bg-success p-3">
+          <h5>Profit</h5>
+          <p>Daily Profit: KES 0.00</p>
+          <p>Weekly Profit: KES 0.00</p>
+          <p>Monthly Profit: KES 0.00</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-bg-warning p-3">
+          <h5>System Summary</h5>
+          <p>Total Worth: KES 0.00</p>
+          <p>Number of Items: 0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+ <div id="categories-section" style="display: none;">
+  <h2>Categories</h2>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs mb-3" id="categoryTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="electronics-tab" data-bs-toggle="tab" data-bs-target="#electronics" type="button" role="tab">Electronics</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="phones-tab" data-bs-toggle="tab" data-bs-target="#phones" type="button" role="tab">Mobile Phones</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="accessories-tab" data-bs-toggle="tab" data-bs-target="#accessories" type="button" role="tab">Accessories</button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <!-- Electronics -->
+    <div class="tab-pane fade show active" id="electronics" role="tabpanel">
+      <h4>Electronics</h4>
+      <form class="mb-3">
+        <div class="mb-3">
+          <label>Electronic Type</label>
+          <select class="form-control">
+            <option>Televisions</option>
+            <option>Speakers</option>
+            <option>Hoofers</option>
+            <option>Radios</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label>Item Name</label>
+          <input type="text" class="form-control" placeholder="e.g. Sony Bravia 55''">
+        </div>
+        <div class="mb-3">
+          <label>Price</label>
+          <input type="number" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Electronic Item</button>
+      </form>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Item Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Televisions</td>
+            <td>Samsung QLED 65"</td>
+            <td>KES 150,000</td>
+            <td>
+              <button class="btn btn-sm btn-warning">Edit</button>
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile Phones -->
+    <div class="tab-pane fade" id="phones" role="tabpanel">
+      <h4>Mobile Phones</h4>
+      <form class="mb-3">
+        <div class="mb-3">
+          <label>Brand</label>
+          <select class="form-control">
+            <option>Samsung</option>
+            <option>Infinix</option>
+            <option>iPhone</option>
+            <option>Oppo</option>
+            <option>Itel</option>
+            <option>Tecno</option>
+            <option>Redmi</option>
+            <option>Realme</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label>Model Name</label>
+          <input type="text" class="form-control" placeholder="e.g. Galaxy S23">
+        </div>
+        <div class="mb-3">
+          <label>Price</label>
+          <input type="number" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Phone</button>
+      </form>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>iPhone</td>
+            <td>iPhone 14 Pro</td>
+            <td>KES 200,000</td>
+            <td>
+              <button class="btn btn-sm btn-warning">Edit</button>
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Accessories -->
+    <div class="tab-pane fade" id="accessories" role="tabpanel">
+      <h4>Accessories</h4>
+      <form class="mb-3">
+        <div class="mb-3">
+          <label>Accessory Type</label>
+          <select class="form-control">
+            <option>Screen Protectors</option>
+            <option>Phone Cases</option>
+            <option>Chargers</option>
+            <option>Earphones/Earpods</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label>Item Name</label>
+          <input type="text" class="form-control" placeholder="e.g. Fast Charger 25W">
+        </div>
+        <div class="mb-3">
+          <label>Price</label>
+          <input type="number" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Accessory</button>
+      </form>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Item Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Chargers</td>
+            <td>Fast Charger 25W</td>
+            <td>KES 1,500</td>
+            <td>
+              <button class="btn btn-sm btn-warning">Edit</button>
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Manage Users -->
+  <div id="manage-users-section" style="display: none;">
+    <h2>Manage Users</h2>
+    <form>
+      <div class="mb-3">
+        <label>User Name</label>
+        <input class="form-control" type="text">
+      </div>
+      <div class="mb-3">
+        <label>Email</label>
+        <input class="form-control" type="email">
+      </div>
+      <div class="mb-3">
+        <label>Phone</label>
+        <input class="form-control" type="tel">
+      </div>
+      <div class="mb-3">
+        <label>Role</label>
+        <select class="form-control">
+          <option>Admin/Owner</option>
+          <option>Manager</option>
+          <option>Agent</option>
+        </select>
+      </div>
+      <button class="btn btn-primary">Add User</button>
+    </form>
+    <hr/>
+    <h4>Existing Users</h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Jane Doe</td>
+          <td>jane@example.com</td>
+          <td>0712345678</td>
+          <td>Manager</td>
+          <td>
+            <button class="btn btn-sm btn-warning">Edit</button>
+            <button class="btn btn-sm btn-danger">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Roles Management -->
+  <div id="roles-management-section" style="display: none;">
+    <h2>Roles Management</h2>
+    <form>
+      <div class="mb-3">
+        <label>Role Name</label>
+        <input class="form-control" type="text">
+      </div>
+      <button class="btn btn-primary">Add Role</button>
+    </form>
+    <hr/>
+    <h4>Existing Roles</h4>
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        Admin
+        <div>
+          <button class="btn btn-sm btn-warning">Edit</button>
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        Manager
+        <div>
+          <button class="btn btn-sm btn-warning">Edit</button>
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </div>
+      </li><li class="list-group-item d-flex justify-content-between align-items-center">
+        Agent
+        <div>
+          <button class="btn btn-sm btn-warning">Edit</button>
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Permissions -->
+  <div id="permissions-section" style="display: none;">
+    <h2>Permissions</h2>
+    <form>
+      <div class="mb-3">
+        <label>Permission Name</label>
+        <input class="form-control" type="text" placeholder="e.g. View Sales">
+      </div>
+      <button class="btn btn-primary">Add Permission</button>
+    </form>
+    <hr/>
+    <h4>Existing Permissions</h4>
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        View Sales
+        <button class="btn btn-sm btn-danger">Delete</button>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        Edit Users
+        <button class="btn btn-sm btn-danger">Delete</button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Onboarding -->
+  <div id="onboarding-section" style="display: none;">
+    <h2>User Onboarding</h2>
+    <form>
+      <div class="mb-3">
+        <label>Name</label>
+        <input class="form-control" type="text">
+      </div>
+      <div class="mb-3">
+        <label>Email</label>
+        <input class="form-control" type="email">
+      </div>
+      <div class="mb-3">
+        <label>Identity Number</label>
+        <input class="form-control" type="text">
+      </div>
+      <div class="mb-3">
+        <label>Phone Number</label>
+        <input class="form-control" type="tel">
+      </div>
+      <div class="mb-3">
+        <label>Assign Role</label>
+        <select class="form-control">
+          <option>Admin/Owner</option>
+          <option>Manager</option>
+          <option>Agent</option>
+        </select>
+      </div>
+      <button class="btn btn-primary">Register User</button>
+    </form>
+  </div>
+
+  <!-- Sales Report -->
+  <div id="sales-report-section" style="display: none;">
+    <h2>Sales Report</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Reference No.</th>
+          <th>Client Name</th>
+          <th>ID Number</th>
+          <th>Price</th>
+          <th>Item IMEI</th>
+          <th>Seller</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>REF1234</td>
+          <td>John Doe</td>
+          <td>12345678</td>
+          <td>KES 5,000</td>
+          <td>123456789012345</td>
+          <td>Jane</td>
+          <td>
+            <button class="btn btn-sm btn-warning">Edit</button>
+            <button class="btn btn-sm btn-danger">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+ <div id="record-sale-section" style="display: none;">
+  <h2>Record Sale</h2>
+  <form id="recordSaleForm">
+    <div class="mb-3">
+      <label>Select Category</label>
+      <select id="mainCategory" class="form-control" onchange="showSubCategoryFields()">
+        <option value="">-- Select Category --</option>
+        <option value="phones">Mobile Phones</option>
+        <option value="electronics">Electronics</option>
+        <option value="accessories">Accessories</option>
+      </select>
+    </div>
+
+    <!-- Phones Subcategory -->
+    <div class="sub-section" id="phones-sub" style="display:none;">
+      <div class="mb-3">
+        <label>Phone Brand</label>
+        <select class="form-control" id="phoneBrand">
+          <option>Samsung</option>
+          <option>Infinix</option>
+          <option>iPhone</option>
+          <option>Oppo</option>
+          <option>Itel</option>
+          <option>Tecno</option>
+          <option>Redmi</option>
+          <option>Realme</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label>Model Name</label>
+        <input class="form-control" type="text" placeholder="e.g. Galaxy S23">
+      </div>
+    </div>
+
+    <!-- Electronics Subcategory -->
+    <div class="sub-section" id="electronics-sub" style="display:none;">
+      <div class="mb-3">
+        <label>Electronic Type</label>
+        <select class="form-control">
+          <option>Televisions</option>
+          <option>Speakers</option>
+          <option>Hoofers</option>
+          <option>Radios</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label>Item Name</label>
+        <input class="form-control" type="text" placeholder="e.g. Sony Bravia 55''">
+      </div>
+    </div>
+
+    <!-- Accessories Subcategory -->
+    <div class="sub-section" id="accessories-sub" style="display:none;">
+      <div class="mb-3">
+        <label>Accessory Type</label>
+        <select class="form-control">
+          <option>Screen Protectors</option>
+          <option>Phone Cases</option>
+          <option>Chargers</option>
+          <option>Earphones/Earpods</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label>Item Name</label>
+        <input class="form-control" type="text" placeholder="e.g. Fast Charger 25W">
+      </div>
+    </div>
+
+    <!-- Common fields -->
+    <div class="mb-3">
+      <label>Item Code</label>
+      <input class="form-control" type="text">
+    </div>
+    <div class="mb-3">
+      <label>Actual Selling Price</label>
+      <input class="form-control" type="number">
+    </div>
+    <div class="mb-3">
+      <label>Quantity Sold</label>
+      <input class="form-control" type="number">
+    </div>
+    <button type="submit" class="btn btn-success">Record Sale</button>
+  </form>
+</div>
+<script>
+  function showSubCategoryFields() {
+    const val = document.getElementById('mainCategory').value;
+
+    document.getElementById('phones-sub').style.display = (val === 'phones') ? 'block' : 'none';
+    document.getElementById('electronics-sub').style.display = (val === 'electronics') ? 'block' : 'none';
+    document.getElementById('accessories-sub').style.display = (val === 'accessories') ? 'block' : 'none';
+  }
+</script>
+
+  <!-- Generate Report -->
+<div id="generate-report-section" style="display: none;">     
+  <h2>Generate Report</h2>
+  <form>
+    <div class="mb-3">
+      <label>Report Type</label>
+      <select class="form-control">
+        <option>Daily Sales</option>
+        <option>Weekly Sales</option>
+        <option>Monthly Sales</option>
+        <option>Yearly Sales</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label>Date Range</label>
+      <input type="date" class="form-control" placeholder="From">
+      <input type="date" class="form-control mt-2" placeholder="To">
+    </div>
+    <button class="btn btn-primary">Generate Report</button>
+  </form>           
+</div>
+
+  <!-- Settings -->
+  <div id="settings-section" style="display: none;">
+    <h2>Settings</h2>
+    <p>coming soon.</p>
+  </div>
+</div>
+
+<!-- Keep only this .content div -->
+<div class="content" style="padding-top: 10px;">
+  <!-- ALL your sections here as you have them -->
+</div>
+
+<!-- Bottom Navbar -->
+<div class="bottom-navbar">
+  &copy; 2025 powered by Fieldmax Systems
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Add section-switching logic -->
+<script>
+  function showSection(sectionId) {
+    const sections = document.querySelectorAll('.content > div');
+    sections.forEach(div => {
+      div.style.display = (div.id === sectionId + '-section') ? 'block' : 'none';
+    });
+  }
+
+  // Optionally show dashboard by default on page load:
+  showSection('dashboard');
+</script>
+</body>
+</html>
