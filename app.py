@@ -1,147 +1,145 @@
-from flask import Flask, render_template, request, redirect, url_for, session,flash
-from werkzeug.security import check_password_hash, check_password_hash, generate_password_hash
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import psycopg2
-from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'secret-key-123'
-conn = psycopg2.connect(
-    host="dpg-d1jka6u3jp1c73ecbfo0-a.oregon-postgres.render.com",
-    database="postgresql_vintrev",
-    user="postgresql_vintrev_user",
-    password="DH200Hh5o7jeQgUCqLoTcE9s8inwKOhv",
-    port="5432"
-)
-cursor= conn.cursor()
 
-# Insert user
-email = "vintrevlimited@gmail.com"
-hashed_password = generate_password_hash("Vintrev@2025")
+# Database connection
+def get_db_connection():
+    conn = psycopg2.connect(
+        host="dpg-d1jka6u3jp1c73ecbfo0-a.oregon-postgres.render.com",
+        database="postgresql_vintrev",
+        user="postgresql_vintrev_user",
+        password="DH200Hh5o7jeQgUCqLoTcE9s8inwKOhv",
+        port="5432"
+    )
+    return conn
 
-query = """
-    INSERT INTO users (email, password_hash)
-    VALUES (%s, %s)
-"""
-cursor.execute(query, (email, hashed_password))
-conn.commit()
-
-cursor.close()
-conn.close()
-
-# Decorator to check if user is logged in
+# Decorator to protect routes
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'username' not in session:
+            flash("Please login first.", "warning")
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
 
+# Create users table if not exists
+def create_users_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+
+    # Check if the default user exists
+    cursor.execute("SELECT * FROM users WHERE email=%s", ("vintrevlimited@gmail.com",))
+    user = cursor.fetchone()
+    if not user:
+        hashed_password = generate_password_hash("Vintrev@2025")
+        cursor.execute(
+            "INSERT INTO users (email, password_hash) VALUES (%s, %s)",
+            ("vintrevlimited@gmail.com", hashed_password)
+        )
+        conn.commit()
+
+    cursor.close()
+    conn.close()
+
+# Routes
 
 @app.route('/')
-def home():
-    return redirect(url_for('login'))
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email'].strip().lower()
-        password = request.form['password'].strip()
+        email = request.form['email']
+        password = request.form['password']
 
-        try:
-            # IMPORTANT: create new connection for each request if outside app context
-            conn = psycopg2.connect(
-                host="dpg-d1jka6u3jp1c73ecbfo0-a.oregon-postgres.render.com",
-                database="postgresql_vintrev",
-                user="postgresql_vintrev_user",
-                password="DH200Hh5o7jeQgUCqLoTcE9s8inwKOhv",
-                port="5432"
-            )
-            cursor = conn.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+        user = cursor.fetchone()
 
-            cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-            user = cursor.fetchone()
+        cursor.close()
+        conn.close()
 
-            if user:
-                stored_hash = user[6]   # adjust index to match password_hash column position
-                if check_password_hash(stored_hash, password):
-                    session['user_id'] = user[0]
-                    session['email'] = user[5]  # adjust index to match email column position
-                    flash("Login successful", "success")
-                    return redirect(url_for('dashboard'))
-                else:
-                    flash("Invalid email or password", "danger")
+        if user:
+            user_email = user[1]
+            user_password_hash = user[2]
+            if check_password_hash(user_password_hash, password):
+                session['username'] = user_email
+                flash("Login successful.", "success")
+                return redirect(url_for('dashboard'))
             else:
-                flash("Invalid email or password", "danger")
+                flash("Invalid password.", "danger")
+        else:
+            flash("Email not found.", "danger")
 
-        except Exception as e:
-            conn.rollback()
-            flash("Login error: " + str(e), "danger")
-
-        finally:
-            cursor.close()
-            conn.close()
-
-    return render_template('logins.html', datetime=datetime)
+    return render_template('login.html')
 
 @app.route('/logout')
-@login_required
 def logout():
     session.clear()
-    return redirect(url_for('logins.html'))
+    flash("Logged out successfully.", "success")
+    return redirect(url_for('login'))
 
-
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    return render_template('dashboard.html', user=session.get('username'))
-
-# Add similar routes for all your pages
 @app.route('/categories')
 @login_required
 def categories():
-    return render_template('categories.html',  user=session.get('username'))
-
-@app.route('/record_sale')
-@login_required
-def record_sale():
-    return render_template('record_sale.html',  user=session.get('username'))
+    return render_template('categories.html')
 
 @app.route('/manage_users')
 @login_required
 def manage_users():
-    return render_template('manage_users.html', user=session.get('username'))
+    return render_template('manage_users.html')
 
 @app.route('/roles_management')
 @login_required
 def roles_management():
-    return render_template('roles_management.html',  user=session.get('username'))
+    return render_template('roles_management.html')
 
 @app.route('/permissions')
 @login_required
 def permissions():
-    return render_template('permissions.html', user=session.get('username'))
+    return render_template('permissions.html')
 
 @app.route('/onboarding')
 @login_required
 def onboarding():
-    return render_template('onboarding.html',  user=session.get('username'))
+    return render_template('onboarding.html')
 
 @app.route('/sales_report')
 @login_required
 def sales_report():
-    return render_template('sales_report.html',  user=session.get('username')) 
+    return render_template('sales_report.html')
+
+@app.route('/record_sale')
+@login_required
+def record_sale():
+    return render_template('record_sale.html')
 
 @app.route('/generate_report')
 @login_required
 def generate_report():
-    return render_template('generate_report.html', user=session.get('username'))
+    return render_template('generate_report.html')
 
 @app.route('/settings')
 @login_required
 def settings():
-    return render_template('settings.html',  user=session.get('username'))
+    return render_template('settings.html')
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    create_users_table()
     app.run(debug=True)
