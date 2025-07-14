@@ -1,15 +1,35 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session,flash
+from werkzeug.security import check_password_hash, check_password_hash, generate_password_hash
 from functools import wraps
+import psycopg2
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'secret-key-123'
+conn = psycopg2.connect(
+    host="dpg-d1jka6u3jp1c73ecbfo0-a.oregon-postgres.render.com",
+    database="postgresql_vintrev",
+    user="postgresql_vintrev_user",
+    password="DH200Hh5o7jeQgUCqLoTcE9s8inwKOhv",
+    port="5432"
+)
+cursor= conn.cursor()
 
-# Hardcoded users
-valid_users = {
-    'admin': '123456',
-    'manager': 'managerpw',
-    'agent': 'agentpw'
-}
+# Insert user
+email = "vintrevlimited@gmail.com"
+hashed_password = generate_password_hash("Vintrev@2025")
+
+query = """
+    INSERT INTO users (email, password_hash)
+    VALUES (%s, %s)
+"""
+cursor.execute(query, (email, hashed_password))
+conn.commit()
+
+cursor.close()
+conn.close()
+
+# Decorator to check if user is logged in
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -21,25 +41,6 @@ def login_required(f):
 
 @app.route('/')
 def home():
-    return redirect(url_for('login'))
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        if username in valid_users and valid_users[username] == password:
-            session['username'] = username
-            return redirect(url_for('dashboard'))
-        else:
-            error = "Invalid username or password!"
-            return render_template('logins.html', error=error)
-    return render_template('logins.html')
-
-@app.route('/logout')
-def logout():
-    session.clear()
     return redirect(url_for('login'))
 
 
