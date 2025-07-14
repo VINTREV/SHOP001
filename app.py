@@ -43,6 +43,54 @@ def login_required(f):
 def home():
     return redirect(url_for('login'))
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email'].strip().lower()
+        password = request.form['password'].strip()
+
+        try:
+            # IMPORTANT: create new connection for each request if outside app context
+            conn = psycopg2.connect(
+                host="dpg-d1jka6u3jp1c73ecbfo0-a.oregon-postgres.render.com",
+                database="postgresql_vintrev",
+                user="postgresql_vintrev_user",
+                password="DH200Hh5o7jeQgUCqLoTcE9s8inwKOhv",
+                port="5432"
+            )
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+            user = cursor.fetchone()
+
+            if user:
+                stored_hash = user[6]   # adjust index to match password_hash column position
+                if check_password_hash(stored_hash, password):
+                    session['user_id'] = user[0]
+                    session['email'] = user[5]  # adjust index to match email column position
+                    flash("Login successful", "success")
+                    return redirect(url_for('dashboard'))
+                else:
+                    flash("Invalid email or password", "danger")
+            else:
+                flash("Invalid email or password", "danger")
+
+        except Exception as e:
+            conn.rollback()
+            flash("Login error: " + str(e), "danger")
+
+        finally:
+            cursor.close()
+            conn.close()
+
+    return render_template('logins.html', datetime=datetime)
+
+@app.route('/logout')
+@login_required
+def logout():
+    session.clear()
+    return redirect(url_for('logins.html'))
+
 
 @app.route('/dashboard')
 @login_required
