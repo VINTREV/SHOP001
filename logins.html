@@ -12,23 +12,23 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        height: 80vh;
         margin: 0;
     }
 
     .login-container {
         background-color: #1f1f1f;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        padding: 5rem;
+        border-radius: 6px;
+        box-shadow: 0 10px 15px rgba(251, 249, 249, 0.5);
         width: 100%;
-        max-width: 400px;
+        max-width: 300px;
         text-align: center;
     }
 
     h2 {
         color: #42a5f5;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0rem;
     }
 
     input[type="text"],
@@ -71,7 +71,7 @@
     {% endif %}
     <form method="POST">
       <input type="text" name="email" placeholder="Enter Email" required>
-      <input type="password" name="password" placeholder=" Enter Password" required>
+      <input type="password" name="password" placeholder="Enter Password" required>
       <button type="submit">Login</button>
     </form>
   </div>
