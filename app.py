@@ -103,6 +103,11 @@ def dashboard():
 def categories():
     return render_template('categories.html',  user=session.get('username'))
 
+@app.route('/record_sale')
+@login_required
+def record_sale():
+    return render_template('record_sale.html',  user=session.get('username'))
+
 @app.route('/manage_users')
 @login_required
 def manage_users():
@@ -127,11 +132,6 @@ def onboarding():
 @login_required
 def sales_report():
     return render_template('sales_report.html',  user=session.get('username')) 
-
-@app.route('/record_sale')
-@login_required
-def record_sale():
-    return render_template('record_sale.html',  user=session.get('username'))
 
 @app.route('/generate_report')
 @login_required
